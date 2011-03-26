@@ -1,10 +1,16 @@
 # imports and config # {{{
 from zreplier import ZReplier, query_maker
-import bsddb, time, logging
+import bsddb, time, logging, os, random, hashlib
 import json as msgpack
+
+if hasattr(random, 'SystemRandom'):
+    randrange = random.SystemRandom().randrange
+else:
+    randrange = random.randrange
 
 ZUMS_BIND = "tcp://127.0.0.1:7979"
 logger = logging.getLogger("zumsd")
+MAX_SESSION_KEY = 18446744073709551616L     # 2 << 63
 # }}}
 
 # BDBSessionStore # {{{
@@ -16,9 +22,23 @@ class BDBSessionStore:
             db_file, len(self.db)
         )
 
+    def get_next_key(self):
+        try:
+            pid = os.getpid()
+        except AttributeError:
+            # No getpid() in Jython, for example
+            pid = 1
+        while 1:
+            session_key = hashlib.md5(
+                "%s%s%s" % (randrange(0, MAX_SESSION_KEY), pid, time.time())
+            ).hexdigest()
+            if not self.exists(session_key):
+                break
+        return session_key
+
     def create(self):
         session = {}
-        sid = "asd"
+        sid = self.get_next_key()
         session["sessionid"] = sid
         session["created_on"] = time.time()
         self.db[sid] = msgpack.dumps(session)
