@@ -1,4 +1,5 @@
-import zmq, threading, time, msgpack, logging
+import zmq, threading, time, logging
+import json as msgpack
 
 CONTEXT = zmq.Context()
 ZNull = zmq.Message(None)
@@ -89,7 +90,7 @@ class ZReplier(threading.Thread):
                     logger.info("NoReply for: %s" % message)
                     send_multi(self.socket, parts, "Unknown command.")
                 except Exception, e:
-                    logger.exception("Exception %s for: %s" % (e, message), e)
+                    logger.exception("Exception %s for: %s" % (e, message))
                     send_multi(self.socket, parts, "exception: %s" % e)
 
             self.thread_quit()
@@ -131,7 +132,7 @@ def query_maker(bind):
         else:
             cmd = ""
         socket.send(cmd)
-        response = socket.recv()
+        return socket.recv()
 
     return query
 

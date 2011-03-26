@@ -13,3 +13,4 @@ eggs
 parts
 ROOT/*.egg-info
 build
+*.bdb

@@ -1,6 +1,7 @@
 # imports and config # {{{
 from zreplier import ZReplier, query_maker
-import bsddb, time, msgpack, logging
+import bsddb, time, logging
+import json as msgpack
 
 ZUMS_BIND = "tcp://127.0.0.1:7979"
 logger = logging.getLogger("zumsd")
@@ -17,7 +18,7 @@ class BDBSessionStore:
 
     def create(self):
         session = {}
-        sid = ""
+        sid = "asd"
         session["sessionid"] = sid
         session["created_on"] = time.time()
         self.db[sid] = msgpack.dumps(session)
@@ -26,13 +27,12 @@ class BDBSessionStore:
     def get(self, sid):
         return self.db[sid]
 
-    def set(self, sid, **kw):
-        kw.pop("sessionid", None) # ignore sessionid, it can not be changed
-        session = msgpack.loads(self.db[sid])
-        session.update(kw)
-        session = msgpack.dumps(session)
-        self.db[sid] = session
-        return session
+    def set(self, sid, value):
+        print value
+        data = msgpack.loads(value)
+        data.pop("sessionid", None) # ignore sessionid, it can not be changed
+        self.db[sid] = msgpack.dumps(data)
+        return "OK"
 
     def exists(self, sid):
         return sid in self.db # and checks TODO
@@ -41,26 +41,28 @@ class BDBSessionStore:
         if sid in self.db: del self.db[sid]
 # }}}
 
-sessions = BDBSessionStore()
-
 # ZUMSServer # {{{
 class ZUMSServer(ZReplier):
+    def thread_init(self):
+        super(ZUMSServer, self).thread_init()
+        self.sessions = BDBSessionStore()
+
     def reply(self, line):
         if line == "session_create":
-            return sessions.create()
+            return self.sessions.create()
         if line.startswith("session_get:"):
             parts = line.split(":")
-            return sessions.get(parts[1])
+            return self.sessions.get(parts[1])
         if line.startswith("session_set:"):
-            parts = line.split(":")
-            return sessions.set(parts[1], parts[2])
+            parts = line.split(":", 2)
+            return self.sessions.set(parts[1], parts[2])
         if line.startswith("session_create:"):
-            parts = line.split(":")
-            if sessions.exists(parts[1]): return "ZUMS.SessionExists"
-            return sessions.set(parts[1], parts[2])
+            parts = line.split(":", 2)
+            if self.sessions.exists(parts[1]): return "ZUMS.SessionExists"
+            return self.sessions.set(parts[1], parts[2])
         if line.startswith("session_delete:"):
             parts = line.split(":")
-            sessions.delete(parts[1])
+            self.sessions.delete(parts[1])
             return "OK"
         return super(ZUMSServer, self).reply(line)
 # }}}
