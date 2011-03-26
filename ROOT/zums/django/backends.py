@@ -1,11 +1,10 @@
 from django.contrib.sessions.backends.base import SessionBase, CreateError
-from zumsd import query
+from zums.zumsd import query
 import msgpack
 
 class SessionStore(SessionBase):
-    """
-    Implements ZUMS session store.
-    """
+    """ Implements ZUMS session store. """
+
     def __init__(self, session_key=None):
         super(SessionStore, self).__init__(session_key)
 
@@ -18,10 +17,6 @@ class SessionStore(SessionBase):
         self._session_cache = {}
 
     def save(self, must_create=False):
-        """
-        Saves the current session data to the database. If 'must_create' is
-        CRAP.
-        """
         if must_create:
             if query(
                 "session_create:%s:%s" % (
