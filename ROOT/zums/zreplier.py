@@ -12,7 +12,7 @@ def recv_multi(sock):
     return parts
 
 def send_multi(sock, parts, reply=None):
-    if reply:
+    if reply is not None:
         parts[-1] = reply
     for part in parts[:-1]:
         sock.send(part, zmq.SNDMORE)

@@ -16,6 +16,9 @@ class SessionStore(SessionBase):
         self.modified = True
         self._session_cache = {}
 
+    def exists(self, session_key):
+        return bool(query("session_exists:%s" % session_key))
+
     def save(self, must_create=False):
         if must_create:
             if query(

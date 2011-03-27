@@ -47,7 +47,6 @@ class BDBSessionStore:
         return self.db[sid]
 
     def set(self, sid, value):
-        print value
         data = msgpack.loads(value)
         data.pop("sessionid", None) # ignore sessionid, it can not be changed
         self.db[sid] = msgpack.dumps(data)
@@ -76,6 +75,9 @@ class ZUMSServer(ZReplier):
         if line.startswith("session_get:"):
             parts = line.split(":")
             return self.sessions.get(parts[1])
+        if line.startswith("session_exists:"):
+            parts = line.split(":")
+            return "yes" if self.sessions.exists(parts[1]) else ""
         if line.startswith("session_set:"):
             parts = line.split(":", 2)
             return self.sessions.set(parts[1], parts[2])
