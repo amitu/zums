@@ -10,4 +10,7 @@ setup(
     packages = find_packages('ROOT'),
     package_dir = {'': 'ROOT'},
     install_requires = ['setuptools'],
+    entry_points={
+      'console_scripts': ['zumsd = zums.zumsd:main']
+    }
 )
