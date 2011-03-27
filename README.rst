@@ -1,6 +1,8 @@
 ZUMS
 ====
 
+One auth to rule them all.
+
 Django has its way of handling users and sessions. Ruby has its own. Java
 servlets has their own. And so on. Not good.
 
@@ -72,4 +74,17 @@ Zumsd ZeroMQ API
 
 TBD
 
+Zumsd Extensions
+----------------
 
+Zumsd can be extended by writing plugins. Zumsd talks to plugins, over zeromq,
+so plugins can be written in any language one wishes too.
+
+Plugins are quite simple, they just subscribe (zmq.SUB) to messages that zumsd
+sends over, they then user zumsd ZeroMQ api mentioned above to update data
+managed by zumsd or do whatever they want.
+
+For simplicty zumsd supports python plugins, they live within the zumsd
+process, and need not be managed as separate service.
+
+TBD
