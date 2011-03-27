@@ -69,6 +69,26 @@ class ZUMSServer(ZReplier):
         super(ZUMSServer, self).thread_init()
         self.sessions = BDBSessionStore(self.sessionfile)
 
+    def authenticate(self, line):
+        from django.contrib.auth.models import User
+        parts = line.split(":", 2)
+        if len(parts) < 3: return ""
+        try: user = User.objects.get(username=parts[1])
+        except User.DoesNotExist: return ""
+        if not user.check_password(parts[2]): return ""
+        return msgpack.dumps(
+            {
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+
+                "is_superuser": user.is_superuser,
+                "is_staff": user.is_staff,
+                "is_active": user.is_active,
+            }
+        )
+
     def reply(self, line):
         if line == "session_create":
             return self.sessions.create()
@@ -89,6 +109,8 @@ class ZUMSServer(ZReplier):
             parts = line.split(":")
             self.sessions.delete(parts[1])
             return "OK"
+        if line.startswith("user_authenticate:"):
+            return self.authenticate(line)
         return super(ZUMSServer, self).reply(line)
 # }}}
 
@@ -100,7 +122,9 @@ def main():
     )
     parser.add_argument("--bind", default=ZUMS_BIND)
     parser.add_argument("--sessionfile", default="./sessions.bdb")
+    parser.add_argument("--settings", default="zums.zumsd_users.settings")
     arguments = parser.parse_args()
+    os.environ["DJANGO_SETTINGS_MODULE"] = arguments.settings
     ZUMSServer(arguments.bind, arguments.sessionfile).loop()
 
 if __name__ == "__main__":

@@ -9,6 +9,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 )
-SESSION_ENGINE = "zums.django.session_engine"
+SESSION_ENGINE = "zums.django_backends.session"
 SECRET_KEY = 'gw2)POSOBX1Z1N4NQ-oh3kv%atu+awg@=@r!jklo@i_v&#o'
 
