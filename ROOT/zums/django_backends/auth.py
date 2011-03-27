@@ -9,15 +9,15 @@ class ZUMSBackend:
 
     def update_user_if_required(self, user, user_info):
         save = False
-        if user.email != user_info.get("email", ""):
-            user.email = user_info.get("email", "")
-            save = True
-        if user.is_staff != user_info.get("is_staff", False):
-            user.is_staff = user_info.get("is_staff", False)
-            save = True
-        if user.is_superuser != user_info.get("is_superuser", False):
-            user.is_superuser = user_info.get("is_superuser", False)
-            save = True
+        def check_attr(name, default=""):
+            if getattr(user, name) != user_info.get(name, default):
+                setattr(user, name, user_info.get(name, default))
+                save = True
+        check_attr("email")
+        check_attr("first_name")
+        check_attr("last_name")
+        check_attr("is_superuser", False)
+        check_attr("is_staff", False)
         if not user.id: save = True
         if save: user.save()
 
