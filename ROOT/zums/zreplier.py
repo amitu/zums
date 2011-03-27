@@ -1,5 +1,4 @@
-import zmq, threading, time, logging
-import json as msgpack
+import zmq, threading, time, logging, msgpack
 
 CONTEXT = zmq.Context()
 ZNull = zmq.Message(None)

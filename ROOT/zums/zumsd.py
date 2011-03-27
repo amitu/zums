@@ -1,7 +1,6 @@
 # imports and config # {{{
 from zreplier import ZReplier, query_maker
-import bsddb, time, logging, os, random, hashlib
-import json as msgpack
+import bsddb, time, logging, os, random, hashlib, msgpack
 
 if hasattr(random, 'SystemRandom'):
     randrange = random.SystemRandom().randrange
