@@ -1,6 +1,6 @@
 # imports and config # {{{
 from zreplier import ZReplier, query_maker
-import bsddb, time, logging, os, random, hashlib, msgpack
+import bsddb, time, logging, os, random, hashlib, msgpack, argparse
 
 if hasattr(random, 'SystemRandom'):
     randrange = random.SystemRandom().randrange
@@ -62,9 +62,13 @@ class BDBSessionStore:
 
 # ZUMSServer # {{{
 class ZUMSServer(ZReplier):
+    def __init__(self, bind, sessionfile):
+        super(ZUMSServer, self).__init__(bind)
+        self.sessionfile = sessionfile
+
     def thread_init(self):
         super(ZUMSServer, self).thread_init()
-        self.sessions = BDBSessionStore()
+        self.sessions = BDBSessionStore(self.sessionfile)
 
     def reply(self, line):
         if line == "session_create":
@@ -88,6 +92,19 @@ class ZUMSServer(ZReplier):
 
 query = query_maker(bind=ZUMS_BIND)
 
+def main():
+    parser = argparse.ArgumentParser(
+        description='zmq based session and user manager for web applications.'
+    )
+    parser.add_argument("--bind", default=ZUMS_BIND)
+    parser.add_argument("--sessionfile", default="./sessions.bdb")
+    arguments = parser.parse_args()
+    ZUMSServer(arguments.bind, arguments.sessionfile).loop()
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    ZUMSServer(ZUMS_BIND).loop()
+    try:
+        main()
+    except Exception:
+        logger.exception("Exception in main")
+        raise
