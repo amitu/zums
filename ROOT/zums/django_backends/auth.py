@@ -22,7 +22,7 @@ class ZUMSBackend:
         if save: user.save()
 
     def authenticate(self, username=None, password=None):
-        user_info = query("user_authenticate:%s:%s" % (username, password))
+        user_info = query(str("user_authenticate:%s:%s" % (username, password)))
         if user_info:
             user_info = msgpack.loads(user_info)
             try:
