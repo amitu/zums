@@ -10,10 +10,10 @@ setup(
     author_email = "upadhyay@gmail.com",
     packages = find_packages('ROOT'),
     package_dir = {'': 'ROOT'},
-    install_requires = ['setuptools'],
+    install_requires = ['setuptools', "fhurl", "msgpack-python", "argparse"],
     entry_points={
         'console_scripts': [
             'zumsd = zums.zumsd:main', "zums_httpd =  zums.zumsd_users.serve:main"
         ]
-    }
+    },
 )
