@@ -13,6 +13,8 @@ setup(
     package_dir = {'': 'ROOT'},
     install_requires = ['setuptools'],
     entry_points={
-      'console_scripts': ['zumsd = zums.zumsd:main']
+        'console_scripts': [
+            'zumsd = zums.zumsd:main', "zums_httpd =  zums.zumsd_users.serve:main"
+        ]
     }
 )
