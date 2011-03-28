@@ -2,12 +2,14 @@ DEBUG = True
 
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = '/tmp/zumsd_users.db'
+
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.auth',
 
     'zums.zumsd_users',
 ]
+
 ROOT_URLCONF = 'zums.zumsd_users.urls'
 
 MIDDLEWARE_CLASSES = (
@@ -15,6 +17,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
+
 SESSION_ENGINE = "zums.django_backends.session"
 AUTHENTICATION_BACKENDS = ["zums.django_backends.auth.ZUMSBackend"]
 
