@@ -50,8 +50,8 @@ def main():
     if args.debug:
         settings.DEBUG = True
 
-    server = CherryPyWSGIServer((args.host, args.port), WSGIHandler())
-    print "Started http server on %s:%s." % (args.host, args.port)
+    server = CherryPyWSGIServer((args.ip, args.port), WSGIHandler())
+    print "Started http server on %s:%s." % (args.ip, args.port)
     print "Hit ^C to exit."
 
     try:

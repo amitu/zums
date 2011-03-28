@@ -1,0 +1,10 @@
+{% if form.errors %}
+    there are errors in the form
+{% endif %}
+<h1>Sign in</h1>
+<form method="post" action=".">
+    <table>
+    {{ form }}
+    </table>
+        <input type="submit">
+</form>
