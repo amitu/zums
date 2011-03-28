@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from zums.zumsd_users.utils import fhurl
+from fhurl import fhurl
 from zums.zumsd_users.forms import LoginForm
 from django.contrib.auth import views as django_auth_views
 

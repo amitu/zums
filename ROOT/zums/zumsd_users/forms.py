@@ -3,7 +3,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, login
 
-from zums.zumsd_users.utils import RequestForm, try_del
+from fhurl import RequestForm, try_del
 # }}}
 
 # LoginForm # {{{
