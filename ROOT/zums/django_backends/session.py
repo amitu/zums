@@ -1,6 +1,9 @@
 from django.contrib.sessions.backends.base import SessionBase, CreateError
 from zums.zumsd import query
-import msgpack
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 class SessionStore(SessionBase):
     """ Implements ZUMS session store. """
@@ -9,7 +12,7 @@ class SessionStore(SessionBase):
         super(SessionStore, self).__init__(session_key)
 
     def load(self):
-        return msgpack.loads(query("session_get:%s" % self.session_key))
+        return json.loads(query("session_get:%s" % self.session_key))
 
     def create(self):
         self.session_key = query("session_create")
@@ -24,7 +27,7 @@ class SessionStore(SessionBase):
             if query(
                 "session_create:%s:%s" % (
                     self.session_key,
-                    msgpack.dumps(self._get_session(no_load=must_create))
+                    json.dumps(self._get_session(no_load=must_create))
                 )
             ) == "ZUMS.SessionExists":
                 raise CreateError
@@ -32,7 +35,7 @@ class SessionStore(SessionBase):
             query(
                 "session_set:%s:%s" % (
                     self.session_key,
-                    msgpack.dumps(self._get_session(no_load=must_create))
+                    json.dumps(self._get_session(no_load=must_create))
                 )
             )
 

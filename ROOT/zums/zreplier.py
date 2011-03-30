@@ -1,4 +1,8 @@
-import zmq, threading, time, logging, msgpack
+import zmq, threading, time, logging
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 CONTEXT = zmq.Context()
 ZNull = zmq.Message(None)
@@ -54,7 +58,7 @@ class ZReplier(threading.Thread):
             if message == "stats":
                 logger.info("stats")
                 self.increment_stats_counter("stats")
-                return msgpack.dumps(self.stats)
+                return json.dumps(self.stats)
             self.increment_stats_counter("no_reply")
             raise NoReply
 
@@ -123,11 +127,11 @@ def query_maker(bind):
 
     def query(*args, **kw):
         if args and kw:
-            cmd = "%s:%s" % ( ":".join(args), msgpack.dumps(kw))
+            cmd = "%s:%s" % ( ":".join(args), json.dumps(kw))
         elif args:
             cmd = ":".join(args)
         elif kw:
-            cmd = msgpack.dumps(kw)
+            cmd = json.dumps(kw)
         else:
             cmd = ""
         socket.send(cmd)

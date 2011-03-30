@@ -1,6 +1,10 @@
 # imports and config # {{{
 from zreplier import ZReplier, query_maker
-import bsddb, time, logging, os, random, hashlib, msgpack, argparse
+import bsddb, time, logging, os, random, hashlib, argparse
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 if hasattr(random, 'SystemRandom'):
     randrange = random.SystemRandom().randrange
@@ -40,16 +44,16 @@ class BDBSessionStore:
         sid = self.get_next_key()
         session["sessionid"] = sid
         session["created_on"] = time.time()
-        self.db[sid] = msgpack.dumps(session)
+        self.db[sid] = json.dumps(session)
         return sid
 
     def get(self, sid):
         return self.db[sid]
 
     def set(self, sid, value):
-        data = msgpack.loads(value)
+        data = json.loads(value)
         data.pop("sessionid", None) # ignore sessionid, it can not be changed
-        self.db[sid] = msgpack.dumps(data)
+        self.db[sid] = json.dumps(data)
         return "OK"
 
     def exists(self, sid):
@@ -76,7 +80,7 @@ class ZUMSServer(ZReplier):
         try: user = User.objects.get(username=parts[1])
         except User.DoesNotExist: return ""
         if not user.check_password(parts[2]): return ""
-        return msgpack.dumps(
+        return json.dumps(
             {
                 "username": user.username,
                 "email": user.email,

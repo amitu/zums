@@ -1,6 +1,9 @@
-import msgpack
 from django.contrib.auth.models import User
 from zums.zumsd import query
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 class ZUMSBackend:
     supports_object_permissions = False
@@ -24,11 +27,13 @@ class ZUMSBackend:
     def authenticate(self, username=None, password=None):
         user_info = query(str("user_authenticate:%s:%s" % (username, password)))
         if user_info:
-            user_info = msgpack.loads(user_info)
+            user_info = json.loads(user_info)
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                user = User(username=user_info["username"], password='get from zums')
+                user = User(
+                    username=user_info["username"], password='get from zums'
+                )
             self.update_user_if_required(user, user_info)
             return user
         return None
