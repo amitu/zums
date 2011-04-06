@@ -94,7 +94,7 @@ class ZReplier(threading.Thread):
                     send_multi(self.socket, parts, "Unknown command.")
                 except Exception, e:
                     logger.exception("Exception %s for: %s" % (e, message))
-                    send_multi(self.socket, parts, "exception: %s" % e)
+                    send_multi(self.socket, parts, "ZUMSD.Exception: %s" % e)
 
             self.thread_quit()
 

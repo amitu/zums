@@ -12,7 +12,9 @@ class SessionStore(SessionBase):
         super(SessionStore, self).__init__(session_key)
 
     def load(self):
-        return json.loads(query("session_get:%s" % self.session_key))
+        s = query("session_get:%s" % self.session_key)
+        if s.startswith("ZUMSD.Exception:"): return {}
+        return json.loads(s)
 
     def create(self):
         self.session_key = query("session_create")
