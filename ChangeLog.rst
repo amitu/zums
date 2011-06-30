@@ -1,3 +1,8 @@
+0.1.5
+=====
+
+* added signals for login and logout events
+
 0.1.4
 =====
 

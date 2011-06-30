@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, login
 
 from fhurl import RequestForm, try_del
+import zums
+from zums.signals import UserSignedIn
 # }}}
 
 # LoginForm # {{{
@@ -33,6 +35,7 @@ class LoginForm(RequestForm):
 
     def save(self):
         login(self.request, self.user_cache)
+        UserSignedIn.send(sender=self.zums, instance=self.user_cache)
         return "/"
 
     def get_json(self, saved):
