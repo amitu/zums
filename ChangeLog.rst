@@ -1,3 +1,8 @@
+0.1.6
+=====
+
+* bugfix, previour release was broken
+
 0.1.5
 =====
 
