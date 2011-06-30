@@ -7,9 +7,9 @@ import zums
 
 from zums.signals import UserSignedOut
 
-def logout_with_signal(request):
+def logout_with_signal(request, *args, **kw):
     user = request.user
-    resp = django_auth_views.logout(request)
+    resp = django_auth_views.logout(request, *args, **kw)
     UserSignedOut.send(sender=zums, instance=user)
     return resp
 

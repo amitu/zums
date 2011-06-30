@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "zums",
-    version = "0.1.6",
+    version = "0.1.7",
     url = 'http://packages.python.org/zums/',
     license = 'BSD',
     description = "ZeroMQ based User and Session management for webapps in different languages/frameworks",
