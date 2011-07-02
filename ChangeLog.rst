@@ -1,3 +1,8 @@
+0.1.8
+=====
+
+* another minor bugfix, need a testsuite now!
+
 0.1.7
 =====
 

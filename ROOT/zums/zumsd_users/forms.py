@@ -35,7 +35,7 @@ class LoginForm(RequestForm):
 
     def save(self):
         login(self.request, self.user_cache)
-        UserSignedIn.send(sender=zums, instance=self.user_cache)
+        UserSignedIn.send(sender=zums, user=self.user_cache, sessionid=self.request.session.session_key)
         return "/"
 
     def get_json(self, saved):
