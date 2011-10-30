@@ -3,7 +3,7 @@ from zums.zumsd import query
 try:
     import json
 except ImportError:
-    import simplejson as json
+    from django.utils import simplejson as json
 
 class ZUMSBackend:
     supports_object_permissions = False
@@ -25,7 +25,9 @@ class ZUMSBackend:
         if save: user.save()
 
     def authenticate(self, username=None, password=None):
-        user_info = query(str("user_authenticate:%s:%s" % (username, password)))
+        user_info = query(
+            str("user_authenticate:%s:%s" % (username, password))
+        )
         if user_info:
             user_info = json.loads(user_info)
             try:

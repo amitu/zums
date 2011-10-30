@@ -4,7 +4,7 @@ import bsddb, time, logging, os, random, hashlib, argparse
 try:
     import json
 except ImportError:
-    import simplejson as json
+    from django.utils import simplejson as json
 
 if hasattr(random, 'SystemRandom'):
     randrange = random.SystemRandom().randrange
