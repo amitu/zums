@@ -30,7 +30,7 @@ urlpatterns = patterns('zums.zumsd_users.views',
     url(
         r'^password/change/$', auth_views.password_change,
         name='auth_password_change',
-        template_name="zumsd_users/password_change.html"
+        kwargs={'template_name': "zumsd_users/password_change.html"}
     ),
     url(
         r'^password/change/done/$', auth_views.password_change_done,
