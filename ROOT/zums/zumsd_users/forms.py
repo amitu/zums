@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import get_current_site
 
 from fhurl import RequestForm, try_del
-import zums
+import zums, hashlib
 from zums.signals import UserSignedIn, UserRegistered
 #from zums.models import RegistrationProfile
 # }}}
