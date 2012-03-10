@@ -3,10 +3,12 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.contrib.sites.models import get_current_site
 
 from fhurl import RequestForm, try_del
 import zums
 from zums.signals import UserSignedIn, UserRegistered
+#from zums.models import RegistrationProfile
 # }}}
 
 # EmailOptionalRegistrationForm # {{{
@@ -71,14 +73,14 @@ class EmailOptionalRegistrationForm(RequestForm):
 # }}}
 
 class EmailOnlyRegistrationForm(RequestForm):
-	name = forms.CharField(
-		label=_("Name (optional)"), max_length=100, required=False
-	)
+    name = forms.CharField(
+        label=_("Name (optional)"), max_length=100, required=False
+    )
     email = forms.EmailField(label=_("Email"))
     password = forms.CharField(
-		label=_("Password"), max_length=50, widget=forms.PasswordInput
-	)
-	
+        label=_("Password"), max_length=50, widget=forms.PasswordInput
+    )
+    
     def clean_email(self):
         email = self.cleaned_data.get('email')
         try:
