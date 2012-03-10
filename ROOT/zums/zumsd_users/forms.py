@@ -97,6 +97,8 @@ class EmailOnlyRegistrationForm(RequestForm):
         self.user = User.objects.create_user(
             username=hashlib.md5(email).hexdigest(), password=d("password"), email=email
         )
+        self.user.first_name = d("name")
+        self.user.save()
         UserRegistered.send(
             sender=zums, user=self.user,
         )
