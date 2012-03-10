@@ -1,3 +1,9 @@
+0.1.9 (unreleased)
+==================
+
+* EmailOnlyRegistrationForm
+* LoginForm now accepts either username or email address in username field
+
 0.1.8
 =====
 
