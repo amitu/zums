@@ -102,7 +102,7 @@ class EmailOnlyRegistrationForm(RequestForm):
         )
         login(
             self.request,
-            authenticate(username=d("username"), password=d("password"))
+            authenticate(username=self.user.username, password=d("password"))
         )
         return "/"
     
